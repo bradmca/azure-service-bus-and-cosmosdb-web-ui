@@ -3,7 +3,7 @@
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
 export default function GlobalError({
-    error,
+    error, // eslint-disable-line @typescript-eslint/no-unused-vars
     reset,
 }: {
     error: Error & { digest?: string };
