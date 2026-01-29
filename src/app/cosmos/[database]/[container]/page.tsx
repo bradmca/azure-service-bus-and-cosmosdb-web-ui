@@ -62,7 +62,7 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
             setHasMore(data.hasMore);
         } catch (err) {
             console.error("Error fetching items:", err);
-            setError(err.message);
+            setError(err instanceof Error ? err.message : "Unknown error");
         } finally {
             setLoading(false);
         }
@@ -98,7 +98,7 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
             setHasMore(false);
         } catch (err) {
             console.error("Error searching items:", err);
-            setError(err.message);
+            setError(err instanceof Error ? err.message : "Unknown error");
         } finally {
             setLoading(false);
         }
@@ -293,7 +293,7 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
                                     </thead>
                                     <tbody>
                                         {items.map((item, index) => (
-                                            <tr key={item.id || index} className="hover:bg-[#f5f5f5]">
+                                            <tr key={(item.id as string) || `item-${index}`} className="hover:bg-[#f5f5f5]">
                                                 <td className="font-mono text-xs text-green-600">
                                                     {item.id || `Item ${index}`}
                                                 </td>
@@ -359,7 +359,7 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
                                 <div className="mb-4">
                                     <label className="label">Document ID</label>
                                     <div className="bg-green-50 border border-green-200 p-3 rounded text-sm font-mono text-green-700">
-                                        {selectedItem.id}
+                                        {String(selectedItem.id)}
                                     </div>
                                 </div>
                                 
