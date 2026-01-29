@@ -35,7 +35,10 @@ function ensureClients() {
 }
 
 if (!isProd) {
-    const g = global as any;
+    const g = global as typeof global & {
+        __sb_client?: ServiceBusClient;
+        __sb_admin_client?: ServiceBusAdministrationClient;
+    };
     if (g.__sb_client && g.__sb_admin_client) {
         serviceBusClient = g.__sb_client;
         serviceBusAdminClient = g.__sb_admin_client;
@@ -45,7 +48,7 @@ if (!isProd) {
 const safeServiceBusClient = new Proxy({} as ServiceBusClient, {
     get: (_target, prop) => {
         ensureClients();
-        return (serviceBusClient as ServiceBusClient as any)[prop];
+        return (serviceBusClient as ServiceBusClient)[prop as keyof ServiceBusClient];
     }
 });
 
@@ -53,7 +56,7 @@ const safeServiceBusAdminClient = new Proxy({} as ServiceBusAdministrationClient
     get: (_target, prop) => {
         ensureClients();
         ensureClients();
-        return (serviceBusAdminClient as ServiceBusAdministrationClient as any)[prop];
+        return (serviceBusAdminClient as ServiceBusAdministrationClient)[prop as keyof ServiceBusAdministrationClient];
     }
 });
 

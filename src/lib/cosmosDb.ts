@@ -52,7 +52,7 @@ export async function queryItems(
     query?: string,
     continuationToken?: string,
     maxItemCount: number = 25
-): Promise<{ items: any[]; continuationToken?: string; hasMore: boolean }> {
+): Promise<{ items: Record<string, unknown>[]; continuationToken?: string; hasMore: boolean }> {
     const client = ensureClient();
     const container = client.database(databaseId).container(containerId);
 
@@ -60,7 +60,10 @@ export async function queryItems(
         ? { query }
         : { query: "SELECT * FROM c" };
 
-    const options: any = {
+    const options: {
+        maxItemCount: number;
+        continuationToken?: string;
+    } = {
         maxItemCount,
         continuationToken: continuationToken || undefined
     };
@@ -79,7 +82,7 @@ export async function getItem(
     containerId: string,
     itemId: string,
     partitionKey: string
-): Promise<any> {
+): Promise<Record<string, unknown> | null> {
     const client = ensureClient();
     const container = client.database(databaseId).container(containerId);
     const { resource } = await container.item(itemId, partitionKey).read();
@@ -92,7 +95,7 @@ export async function searchItems(
     searchField: string,
     searchValue: string,
     maxItemCount: number = 50
-): Promise<any[]> {
+): Promise<Record<string, unknown>[]> {
     const client = ensureClient();
     const container = client.database(databaseId).container(containerId);
 
@@ -107,7 +110,9 @@ export async function searchItems(
 
 // Store client globally in dev mode
 if (!isProd && cosmosClient) {
-    (global as any).__cosmos_client = cosmosClient;
+    (global as typeof global & {
+        __cosmos_client?: CosmosClient;
+    }).__cosmos_client = cosmosClient;
 }
 
 export { ensureClient as getCosmosClient };
