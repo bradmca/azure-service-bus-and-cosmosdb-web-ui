@@ -6,19 +6,20 @@ import { ArrowLeft, Database, Folder, Search, RefreshCw, ChevronRight, Eye, Filt
 import AuthGuard from "@/components/AuthGuard";
 
 interface ItemsResponse {
-    items: any[];
+    items: Record<string, unknown>[];
     continuationToken?: string;
     hasMore: boolean;
+    error?: string;
 }
 
 export default function ContainerPage({ params }: { params: Promise<{ database: string; container: string }> }) {
     const { database, container } = use(params);
-    const [items, setItems] = useState<any[]>([]);
+    const [items, setItems] = useState<Record<string, unknown>[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [continuationToken, setContinuationToken] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<any | null>(null);
+    const [selectedItem, setSelectedItem] = useState<Record<string, unknown> | null>(null);
     
     // Search/Filter state
     const [searchField, setSearchField] = useState("id");
@@ -45,8 +46,8 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
             );
             const data: ItemsResponse = await res.json();
 
-            if ((data as any).error) {
-                throw new Error((data as any).error);
+            if (data.error) {
+                throw new Error(data.error);
             }
 
             if (reset) {
@@ -59,7 +60,7 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
             
             setContinuationToken(data.continuationToken || null);
             setHasMore(data.hasMore);
-        } catch (err: any) {
+        } catch (err) {
             console.error("Error fetching items:", err);
             setError(err.message);
         } finally {
@@ -88,14 +89,14 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
             );
             const data: ItemsResponse = await res.json();
 
-            if ((data as any).error) {
-                throw new Error((data as any).error);
+            if (data.error) {
+                throw new Error(data.error);
             }
 
             setItems(data.items);
             setContinuationToken(null);
             setHasMore(false);
-        } catch (err: any) {
+        } catch (err) {
             console.error("Error searching items:", err);
             setError(err.message);
         } finally {
@@ -118,7 +119,7 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
 
     useEffect(() => {
         fetchItems();
-    }, []);
+    }, [fetchItems]);
 
     const loadMore = () => {
         if (continuationToken && hasMore) {
@@ -245,7 +246,7 @@ export default function ContainerPage({ params }: { params: Promise<{ database: 
                                 </button>
                             </div>
                             <p className="text-xs text-[#666666] mt-2">
-                                Use SQL-like syntax. Example: SELECT * FROM c WHERE c.type = "order" AND c.amount &gt; 100
+                                Use SQL-like syntax. Example: SELECT * FROM c WHERE c.type = &quot;order&quot; AND c.amount &gt; 100
                             </p>
                         </div>
                     )}

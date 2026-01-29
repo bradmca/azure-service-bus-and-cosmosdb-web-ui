@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Shield, Layers, AlertTriangle, Send, Database, Search, ChevronRight, MessageSquare } from "lucide-react";
+import { BookOpen, Shield, Layers, AlertTriangle, Send, Database, Search, ChevronRight } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 
 export default function InstructionsPage() {

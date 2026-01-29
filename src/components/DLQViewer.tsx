@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Loader2, RefreshCw, Eye, Send, AlertTriangle, X, FileJson } from "lucide-react";
 
 interface DLQViewerProps {
@@ -67,7 +67,7 @@ export default function DLQViewer({ topic, subscription, searchQuery = "" }: DLQ
 
     const filteredMessages = getFilteredMessages();
 
-    const fetchMessages = async () => {
+    const fetchMessages = useCallback(async () => {
         setLoading(true);
         setError(null);
         const params = new URLSearchParams();
@@ -95,11 +95,11 @@ export default function DLQViewer({ topic, subscription, searchQuery = "" }: DLQ
         } finally {
             setLoading(false);
         }
-    };
+    }, [topic, subscription]);
 
     useEffect(() => {
         fetchMessages();
-    }, [topic, subscription]);
+    }, [fetchMessages]);
 
     const handleResubmit = async (message: Message) => {
         if (!confirm("Are you sure you want to resubmit this message? It will be sent to the topic.")) return;

@@ -1,4 +1,4 @@
-import { CosmosClient, Database, Container } from "@azure/cosmos";
+import { CosmosClient, Container } from "@azure/cosmos";
 
 import { getEnv } from "./env";
 

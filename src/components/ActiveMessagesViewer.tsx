@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Loader2, RefreshCw, Eye, ChevronDown, ChevronRight, MessageSquare, X, FileJson } from "lucide-react";
 
 interface ActiveMessagesViewerProps {
@@ -67,7 +67,7 @@ export default function ActiveMessagesViewer({ topic, subscription, searchQuery 
 
     const filteredMessages = getFilteredMessages();
 
-    const fetchMessages = async () => {
+    const fetchMessages = useCallback(async () => {
         setLoading(true);
         setError(null);
         const params = new URLSearchParams();
@@ -95,13 +95,13 @@ export default function ActiveMessagesViewer({ topic, subscription, searchQuery 
         } finally {
             setLoading(false);
         }
-    };
+    }, [topic, subscription]);
 
     useEffect(() => {
         if (isExpanded) {
             fetchMessages();
         }
-    }, [topic, subscription, isExpanded]);
+    }, [fetchMessages, isExpanded]);
 
     return (
         <div className="card">

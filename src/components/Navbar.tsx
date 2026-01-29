@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, Server, Database, LayoutDashboard, BookOpen, ChevronDown } from "lucide-react";
+import { LogOut, Server, Database, LayoutDashboard, BookOpen } from "lucide-react";
 import { useState } from "react";
 
 export default function Navbar() {

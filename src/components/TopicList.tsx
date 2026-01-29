@@ -73,7 +73,7 @@ export default function TopicList() {
                 const text = await res.text();
                 try {
                     return JSON.parse(text);
-                } catch (e) {
+                } catch (_e) {
                     throw new Error(`Invalid JSON response: ${text.substring(0, 100)}...`);
                 }
             })

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, Layers, AlertTriangle, Clock, Activity, ChevronRight, RefreshCw, Search, X } from "lucide-react";
 import DLQViewer from "@/components/DLQViewer";
@@ -21,7 +21,7 @@ export default function SubscriptionPage({ params }: { params: Promise<{ topic: 
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
 
-    const fetchSubscription = async () => {
+    const fetchSubscription = useCallback(async () => {
         setLoading(true);
         try {
             const res = await fetch(`/api/topics/${topic}/subscriptions/${sub}`);
@@ -47,11 +47,11 @@ export default function SubscriptionPage({ params }: { params: Promise<{ topic: 
         } finally {
             setLoading(false);
         }
-    };
+    }, [topic, sub]);
 
     useEffect(() => {
         fetchSubscription();
-    }, [topic, sub]);
+    }, [fetchSubscription]);
 
     if (loading) {
         return (
